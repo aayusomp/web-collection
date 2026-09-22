@@ -23,8 +23,8 @@
    ========================================================================= */
 
 window.SUPABASE_CONFIG = {
-  url: '',
-  anonKey: '',
+  url: 'https://bowwfykuqnemrlldfqts.supabase.co',
+  anonKey: 'sb_publishable_qeLs9fTIbUgbfmrUXX_EvQ_mSZ1-SZt',
 
   // Usuario corto para entrar desde el móvil: si escribes "cerveza",
   // por dentro se usa "cerveza@chapas.local".

@@ -25,6 +25,7 @@ const I18N = {
     allCountries: 'Todos los países',
     results: (n, t) => n === t ? `${n} chapas en la colección` : `${n} de ${t} chapas`,
     emptyTitle: 'No hay chapas que coincidan.',
+    emptyCollection: 'Todavía no hay chapas publicadas. Pronto habrá.',
     clearFilters: 'Quitar los filtros',
     producer: 'Fabricante', city: 'Ciudad', abv: 'Alcohol', style: 'Estilo', year: 'Año', type: 'Tipo',
     footer: (n, c) => `${n} chapas de ${c} países. Actualizada continuamente.`,
@@ -45,6 +46,7 @@ const I18N = {
     allCountries: 'All countries',
     results: (n, t) => n === t ? `${n} caps in the collection` : `${n} of ${t} caps`,
     emptyTitle: 'No caps match those filters.',
+    emptyCollection: 'No caps published yet. Soon.',
     clearFilters: 'Clear the filters',
     producer: 'Producer', city: 'City', abv: 'ABV', style: 'Style', year: 'Year', type: 'Type',
     footer: (n, c) => `${n} caps from ${c} countries. Updated all the time.`,
@@ -156,8 +158,19 @@ function renderGrid() {
       </span>
     </button>`).join('');
 
+  // Sin resultados hay dos casos distintos: que los filtros no encuentren nada,
+  // o que la colección esté vacía del todo (recién estrenada).
   $('#empty').hidden = items.length > 0;
-  $('#results').textContent = t('results')(items.length, state.items.length);
+  if (!items.length) {
+    const collectionEmpty = state.items.length === 0;
+    $('#empty').querySelector('[data-i18n]').textContent =
+      t(collectionEmpty ? 'emptyCollection' : 'emptyTitle');
+    $('#clearFilters').hidden = collectionEmpty;
+  }
+
+  $('#results').textContent = state.items.length
+    ? t('results')(items.length, state.items.length)
+    : '';
 }
 
 function renderChips() {
