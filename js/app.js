@@ -3,19 +3,10 @@
    Sin dependencias ni build: se abre tal cual en cualquier navegador.
    ========================================================================= */
 
-/* ---- de qué continente es cada país (código ISO de 2 letras) ---- */
-const CONTINENT_CODES = {
-  europe: 'AD AL AT BA BE BG BY CH CY CZ DE DK EE ES FI FO FR GB GI GR HR HU IE IS IT LI LT LU LV MC MD ME MK MT NL NO PL PT RO RS RU SE SI SK SM TR UA VA XK',
-  america: 'AG AR AW BB BM BO BR BS BZ CA CL CO CR CU CW DM DO EC GD GT GY HN HT JM KN KY LC MX NI PA PE PR PY SR SV TT US UY VC VE',
-  asia: 'AE AF AM AZ BD BH BN BT CN GE HK ID IL IN IQ IR JO JP KG KH KP KR KW KZ LA LB LK MM MN MO MV MY NP OM PH PK PS QA SA SG SY TH TJ TL TM TW UZ VN YE',
-  africa: 'AO BF BI BJ BW CD CF CG CI CM CV DJ DZ EG ER ET GA GH GM GN GQ GW KE KM LR LS LY MA MG ML MR MU MW MZ NA NE NG RW SC SD SL SN SO SS ST SZ TD TG TN TZ UG ZA ZM ZW',
-  oceania: 'AS AU CK FJ FM GU KI MH NC NR NU NZ PF PG PW SB TO TV VU WS',
-};
-
-const CONTINENT_OF = {};
-for (const [continent, codes] of Object.entries(CONTINENT_CODES)) {
-  for (const code of codes.split(' ')) CONTINENT_OF[code] = continent;
-}
+/* Países, banderas y continentes viven en js/countries.js */
+const { flagUrl, continentOfCode } = window.Countries;
+/* Por defecto, el nombre del país en el idioma que esté puesto en la web. */
+const countryName = (code, lang) => window.Countries.countryName(code, lang || state.lang);
 
 /* ---- textos ---- */
 const I18N = {
@@ -83,17 +74,7 @@ const store = {
   set(key, value) { try { localStorage.setItem(key, value); } catch { /* modo privado */ } },
 };
 
-function countryName(code, lang = state.lang) {
-  if (!code) return '';
-  try {
-    return new Intl.DisplayNames([lang], { type: 'region' }).of(code.toUpperCase()) || code;
-  } catch {
-    return code;
-  }
-}
-
-const flagUrl = (code) => `https://flagcdn.com/w40/${String(code || '').toLowerCase()}.png`;
-const continentOf = (item) => CONTINENT_OF[String(item.countryCode || '').toUpperCase()] || 'other';
+const continentOf = (item) => continentOfCode(item.countryCode);
 
 /* Color estable para la chapa de relleno cuando todavía no hay foto. */
 function placeholderColors(seed) {
@@ -384,10 +365,44 @@ function wireEvents() {
 }
 
 /* ---- carga de datos ----
-   Hoy lee data/collection.js. El día que conectemos el panel de administración,
-   basta con que esta función devuelva las chapas del servidor: nada más cambia. */
+   Si hay Supabase configurado en js/config.js, las chapas vienen de ahí
+   (es lo que actualiza el panel desde el móvil). Si no, se usan las de
+   data/collection.js, que sirven de ejemplo y de red de seguridad. */
 async function loadCollection() {
+  const cfg = window.SUPABASE_CONFIG || {};
+
+  if (cfg.url && cfg.anonKey) {
+    try {
+      const response = await fetch(
+        `${cfg.url}/rest/v1/caps?select=*&order=created_at.desc`,
+        { headers: { apikey: cfg.anonKey, Authorization: `Bearer ${cfg.anonKey}` } },
+      );
+      if (!response.ok) throw new Error(`Supabase respondió ${response.status}`);
+      return (await response.json()).map(rowToItem);
+    } catch (error) {
+      console.warn('No se pudo leer de Supabase, uso los datos locales.', error);
+    }
+  }
+
   return Array.isArray(window.COLLECTION) ? window.COLLECTION : [];
+}
+
+/** Traduce una fila de la base de datos al formato que usa la web. */
+function rowToItem(row) {
+  return {
+    id: row.id,
+    name: row.name,
+    type: row.type,
+    countryCode: row.country_code,
+    producer: row.producer,
+    city: row.city,
+    style: row.style,
+    abv: row.abv,
+    year: row.year,
+    notes: row.notes,
+    image: row.image,
+    addedAt: row.created_at,
+  };
 }
 
 function prepare(items) {

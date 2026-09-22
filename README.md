@@ -51,8 +51,22 @@ Guarda, `git commit`, `git push` y en un minuto está publicado.
 
 GitHub Pages sirve la rama `main` directamente. Cada `push` actualiza la web.
 
-## Siguiente paso: editar desde el móvil
+## Editar desde el móvil
 
-La idea es no tener que tocar este repo para añadir chapas: un panel con usuario y
-contraseña donde se hace la foto desde el móvil y se publica sola.
-`loadCollection()` en `js/app.js` es el único punto que habrá que cambiar.
+`admin.html` es el panel: se entra con usuario y contraseña, se hace la foto con la
+cámara del móvil y la chapa aparece publicada al instante, sin tocar este repo.
+
+Los datos y las fotos viven en **Supabase**; la web los lee al cargar. Quien puede
+escribir lo deciden las reglas de `supabase/setup.sql`, no el código del navegador.
+Mientras Supabase no esté configurado en `js/config.js`, la web tira de las chapas
+de ejemplo de `data/collection.js`.
+
+**Los pasos de instalación están en [SETUP.md](SETUP.md).**
+
+## Ver la web mientras trabajas
+
+```bash
+python3 -m http.server 8000
+```
+
+Y abre http://localhost:8000.

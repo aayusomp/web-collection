@@ -1,0 +1,13 @@
+{
+  "name": "Mi colección de chapas",
+  "short_name": "Chapas",
+  "description": "Colección de chapas de cerveza y refrescos de todo el mundo.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f6f1e7",
+  "theme_color": "#c8891b",
+  "icons": [
+    { "src": "img/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Chapas · Panel</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#c8891b">
+<link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="css/admin.css">
+</head>
+<body class="admin">
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <div class="brand">
+      <span class="brand-cap" aria-hidden="true"></span>
+      <span class="brand-text">
+        <strong>Panel de la colección</strong>
+        <small id="sessionLine">Comprobando sesión…</small>
+      </span>
+    </div>
+    <div class="header-actions">
+      <a class="icon-btn" href="./" title="Ver la web" aria-label="Ver la web">&#8599;</a>
+      <button type="button" id="logout" class="icon-btn" hidden title="Salir" aria-label="Salir">&#9211;</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap admin-main">
+
+  <!-- Aviso si falta configurar Supabase -->
+  <section id="notConfigured" class="notice" hidden>
+    <h2>Falta conectar la base de datos</h2>
+    <p>
+      Abre <code>js/config.js</code> y pega ahí la <em>Project URL</em> y la clave
+      <em>anon public</em> de tu proyecto de Supabase. Los pasos completos están en
+      <code>SETUP.md</code>.
+    </p>
+  </section>
+
+  <!-- Login -->
+  <section id="loginView" class="login-card" hidden>
+    <h2>Entrar</h2>
+    <form id="loginForm" autocomplete="on">
+      <label>
+        <span>Usuario</span>
+        <input type="text" id="user" name="username" autocomplete="username"
+               autocapitalize="none" autocorrect="off" spellcheck="false" required>
+      </label>
+      <label>
+        <span>Contraseña</span>
+        <input type="password" id="pass" name="password" autocomplete="current-password" required>
+      </label>
+      <button type="submit" class="btn btn-primary btn-block" id="loginBtn">Entrar</button>
+      <p class="form-error" id="loginError" role="alert"></p>
+    </form>
+  </section>
+
+  <!-- Panel -->
+  <section id="panelView" hidden>
+    <div class="panel-bar">
+      <input type="search" id="adminSearch" placeholder="Buscar en la colección…" aria-label="Buscar">
+      <button type="button" class="btn btn-primary" id="addBtn">+ Añadir chapa</button>
+    </div>
+    <p class="panel-count" id="panelCount"></p>
+    <ul class="cap-list" id="capList"></ul>
+    <p class="panel-empty" id="panelEmpty" hidden>Todavía no hay chapas. Añade la primera.</p>
+  </section>
+</main>
+
+<!-- Formulario de alta / edición -->
+<dialog id="formDialog" class="sheet">
+  <form id="capForm" method="dialog">
+    <div class="sheet-head">
+      <h2 id="formTitle">Nueva chapa</h2>
+      <button type="button" class="icon-btn" data-cancel aria-label="Cerrar">&times;</button>
+    </div>
+
+    <div class="sheet-body">
+      <div class="photo-field">
+        <div class="photo-preview" id="photoPreview"><span>Sin foto</span></div>
+        <div class="photo-actions">
+          <label class="btn btn-soft">
+            Hacer foto
+            <input type="file" id="photoCamera" accept="image/*" capture="environment" hidden>
+          </label>
+          <label class="btn btn-soft">
+            De la galería
+            <input type="file" id="photoFile" accept="image/*" hidden>
+          </label>
+          <button type="button" class="btn btn-soft btn-danger-text" id="photoClear" hidden>Quitar</button>
+        </div>
+      </div>
+
+      <label class="field">
+        <span>Nombre *</span>
+        <input type="text" id="fName" required maxlength="80" placeholder="Mahou Cinco Estrellas">
+      </label>
+
+      <div class="field-row">
+        <label class="field">
+          <span>Tipo *</span>
+          <select id="fType">
+            <option value="beer">Cerveza</option>
+            <option value="soda">Refresco</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>País *</span>
+          <select id="fCountry" required></select>
+        </label>
+      </div>
+
+      <label class="field">
+        <span>Fabricante</span>
+        <input type="text" id="fProducer" maxlength="80" placeholder="Mahou San Miguel">
+      </label>
+
+      <div class="field-row">
+        <label class="field">
+          <span>Ciudad</span>
+          <input type="text" id="fCity" maxlength="60" placeholder="Madrid">
+        </label>
+        <label class="field">
+          <span>Estilo o sabor</span>
+          <input type="text" id="fStyle" maxlength="60" placeholder="Lager">
+        </label>
+      </div>
+
+      <div class="field-row">
+        <label class="field">
+          <span>Alcohol</span>
+          <input type="text" id="fAbv" maxlength="10" placeholder="5.5%">
+        </label>
+        <label class="field">
+          <span>Año</span>
+          <input type="text" id="fYear" maxlength="10" inputmode="numeric" placeholder="2026">
+        </label>
+      </div>
+
+      <label class="field">
+        <span>Comentario</span>
+        <textarea id="fNotes" rows="2" maxlength="300" placeholder="Dónde la pillaste, con quién…"></textarea>
+      </label>
+
+      <p class="form-error" id="formError" role="alert"></p>
+    </div>
+
+    <div class="sheet-foot">
+      <button type="button" class="btn btn-danger" id="deleteBtn" hidden>Borrar</button>
+      <button type="button" class="btn" data-cancel>Cancelar</button>
+      <button type="button" class="btn btn-primary" id="saveBtn">Guardar</button>
+    </div>
+  </form>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<script src="js/countries.js"></script>
+<script src="js/config.js"></script>
+<script type="module" src="js/admin.js"></script>
+</body>
+</html>
