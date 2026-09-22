@@ -1,0 +1,17 @@
+# Windows / OneDrive
+Thumbs.db
+desktop.ini
+ehthumbs.db
+$RECYCLE.BIN/
+*.tmp
+
+# macOS
+.DS_Store
+
+# Editores
+.vscode/
+.idea/
+*.swp
+
+# Fotos originales sin procesar (pesan mucho): deja aquí los volcados del móvil
+img/_originales/

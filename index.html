@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mi colección de chapas</title>
+<meta name="description" content="Colección de chapas de cerveza y refrescos de todo el mundo.">
+<meta name="theme-color" content="#d99a2b">
+<link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://flagcdn.com">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<a class="skip" href="#grid" data-i18n="skip">Ir al contenido</a>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <div class="brand">
+      <span class="brand-cap" aria-hidden="true"></span>
+      <span class="brand-text">
+        <strong data-i18n="siteTitle">Mi colección de chapas</strong>
+        <small data-i18n="siteTagline">Cervezas y refrescos de todo el mundo</small>
+      </span>
+    </div>
+    <div class="header-actions">
+      <div class="seg" role="group" aria-label="Idioma / Language">
+        <button type="button" data-lang="es" class="is-active">ES</button>
+        <button type="button" data-lang="en">EN</button>
+      </div>
+      <button type="button" id="themeToggle" class="icon-btn" aria-label="Cambiar tema">
+        <span class="theme-icon" aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <p class="hero-intro" data-i18n="intro">
+        Colecciono chapas desde hace años: cervezas, refrescos y todo lo que lleve una corona de metal.
+        Cada una es el recuerdo de un sitio, un viaje o una buena tarde. Aquí está la colección al completo.
+      </p>
+      <dl class="stats">
+        <div class="stat"><dt data-i18n="statCaps">Chapas</dt><dd id="statTotal">0</dd></div>
+        <div class="stat"><dt data-i18n="statCountries">Países</dt><dd id="statCountries">0</dd></div>
+        <div class="stat"><dt data-i18n="statBeers">Cervezas</dt><dd id="statBeers">0</dd></div>
+        <div class="stat"><dt data-i18n="statSodas">Refrescos</dt><dd id="statSodas">0</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="toolbar" aria-label="Filtros">
+    <div class="wrap toolbar-inner">
+      <div class="search">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <input type="search" id="search" autocomplete="off" placeholder="Buscar marca, país, estilo…" data-i18n-ph="searchPh" aria-label="Buscar">
+      </div>
+      <div class="chips" id="typeChips" role="group" aria-label="Tipo"></div>
+      <div class="chips" id="continentChips" role="group" aria-label="Continente"></div>
+      <label class="select">
+        <span class="sr-only" data-i18n="country">País</span>
+        <select id="countrySelect"></select>
+      </label>
+      <label class="select">
+        <span class="sr-only" data-i18n="sort">Orden</span>
+        <select id="sortSelect">
+          <option value="country" data-i18n="sortCountry">País</option>
+          <option value="name" data-i18n="sortName">Nombre</option>
+          <option value="recent" data-i18n="sortRecent">Añadidas recientemente</option>
+        </select>
+      </label>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <p class="results" id="results" aria-live="polite"></p>
+    <div id="grid" class="grid"></div>
+    <p class="empty" id="empty" hidden>
+      <span data-i18n="emptyTitle">No hay chapas que coincidan.</span>
+      <button type="button" id="clearFilters" class="link-btn" data-i18n="clearFilters">Quitar los filtros</button>
+    </p>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p id="footerLine"></p>
+  </div>
+</footer>
+
+<dialog id="lightbox" class="lightbox" aria-label="Detalle de la chapa">
+  <button type="button" class="lb-close icon-btn" data-close aria-label="Cerrar">&times;</button>
+  <button type="button" class="lb-nav lb-prev" data-step="-1" aria-label="Anterior">&#8249;</button>
+  <button type="button" class="lb-nav lb-next" data-step="1" aria-label="Siguiente">&#8250;</button>
+  <div class="lb-body">
+    <div class="lb-figure" id="lbFigure"></div>
+    <div class="lb-info">
+      <p class="lb-kicker" id="lbKicker"></p>
+      <h2 id="lbName"></h2>
+      <p class="lb-producer" id="lbProducer"></p>
+      <dl class="lb-meta" id="lbMeta"></dl>
+      <p class="lb-notes" id="lbNotes"></p>
+    </div>
+  </div>
+</dialog>
+
+<script src="data/collection.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
