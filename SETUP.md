@@ -24,24 +24,30 @@ lo que necesitamos aquí.
 5. Ve a **Authentication → Sign In / Providers → Email** y **desactiva
    "Allow new users to sign up"**. Así nadie puede crearse una cuenta por su cuenta
    y ponerse a editar tu colección.
-6. Ve a **Project Settings → API** y copia dos valores:
-   - **Project URL** → algo como `https://abcdefgh.supabase.co`
-   - **anon public** → una clave larga que empieza por `eyJ...`
+6. Copia dos valores:
+   - **Project Settings → Data API → Project URL**
+     → algo como `https://abcdefgh.supabase.co` (**sin** el `/rest/v1/` del final)
+   - **Project Settings → API Keys → Publishable key**
+     → empieza por `sb_publishable_...`
+     (en proyectos creados hace tiempo esto se llamaba *anon public* y empezaba por `eyJ...`;
+     funciona igual)
 
 Pégalos en `js/config.js`:
 
 ```js
 window.SUPABASE_CONFIG = {
   url: 'https://abcdefgh.supabase.co',
-  anonKey: 'eyJhbGciOi...',
+  anonKey: 'sb_publishable_...',
   loginDomain: 'chapas.local',
 };
 ```
 
-> Esas dos claves **son públicas a propósito**: viajan al navegador de cualquiera
+> La *publishable key* **es pública a propósito**: viaja al navegador de cualquiera
 > que abra la web. Lo que protege la colección son las reglas del paso 3, que solo
-> dejan escribir con la sesión iniciada. La clave **`service_role` no se pone aquí
-> nunca** — esa da permisos totales.
+> dejan escribir con la sesión iniciada.
+>
+> Las de **Secret keys** (`sb_secret_...`, antes `service_role`) **no se ponen aquí
+> nunca**: se saltan todas las reglas.
 
 Guarda, `git commit` y `git push`.
 

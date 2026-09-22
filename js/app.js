@@ -373,9 +373,11 @@ async function loadCollection() {
 
   if (cfg.url && cfg.anonKey) {
     try {
+      // Solo la cabecera apikey: vale igual para las claves nuevas
+      // (sb_publishable_...) y para las antiguas (eyJ...).
       const response = await fetch(
         `${cfg.url}/rest/v1/caps?select=*&order=created_at.desc`,
-        { headers: { apikey: cfg.anonKey, Authorization: `Bearer ${cfg.anonKey}` } },
+        { headers: { apikey: cfg.anonKey } },
       );
       if (!response.ok) throw new Error(`Supabase respondió ${response.status}`);
       return (await response.json()).map(rowToItem);
