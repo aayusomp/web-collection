@@ -8,7 +8,7 @@
         "-e",
         "bash",
         "-lc",
-        "cd '/mnt/c/Users/AlbertoAyusoMartín-P/OneDrive - FULL ON NET, S.L/Escritorio/web-collections' && python3 -m http.server 8000"
+        "cd /home/ayuso/web-collection && python3 -m http.server 8000"
       ],
       "port": 8000
     }

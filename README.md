@@ -2,7 +2,7 @@
 
 Web estática para enseñar mi colección de chapas de cerveza y refrescos de todo el mundo.
 
-**En vivo:** https://aayusomp.github.io/web-collections/
+**En vivo:** https://aayusomp.github.io/web-collection/
 
 ## Cómo está hecho
 
